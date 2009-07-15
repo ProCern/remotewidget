@@ -5,6 +5,7 @@
   <script type="text/javascript" src="jquery.jsonp-1.0.5.min.js"></script>
   <script src="http://api.timepedia.org/widget/chronoscope.js"></script> 
   <script src="iso8601.js"></script>
+  <script src="ssbe.js"></script>
     <script>
       $.jsonp.setup({
         cache: true,
@@ -13,59 +14,6 @@
       var metrics_cache = [];
       var graph_list = [];
       var servicedesc = "http://core.deltaplex3.dev.api.local/service_descriptors";
-      function ChronoData() {
-        // methods
-        this.obsToChrono = function obsToChrono(obs)
-        {
-          this.id     = obs.href;
-          this.label  = obs.metric_href;
-          this.axis   = "metric";
-          for (var i=0;i<obs.items.length; i++)
-          {
-            var date = new Date();
-            date.setISO8601(obs.items[i].recorded_at);
-            this.domain[i] = date.getTime();
-            this.range[i] = obs.items[i].value;
-          }
-        }
-        this.id = "default id";
-        this.domain = new Array();
-        this.range = new Array();
-        this.label = "default label";
-        this.axis = "default axis";
-      }
-      function findservice(service_name,callback) {
-        $.jsonp({
-          url:servicedesc, 
-          success:function(services) {
-            found_service = $.grep(services.items, function(service, i) {
-              return service.service_type === service_name;
-            })[0];
-            callback(found_service);
-          }
-        })
-      }
-
-      function findresource(resource_name,service, callback) {
-        $.jsonp({
-          url:found_service.href, 
-          success:function(resources) {
-            resource = $.grep(resources.items, function(resource,i) {
-              return resource.name === resource_name;
-            })[0];
-            callback(resource);
-          }
-        });
-      }
-
-      function getresource(url,callback){
-        $.jsonp({
-          url:url,
-          success:function(res) {
-            callback(res);
-          }
-        });
-      }
 
       $(document).ready(function() {
         findservice("http://systemshepherd.com/services/kernel",function(srv) {
@@ -77,6 +25,7 @@
             })
           })
         });
+
         $("#clientselect").change(function() {
           metrics_cache = [];
           $('#hostselect').empty();
