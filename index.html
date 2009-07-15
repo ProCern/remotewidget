@@ -1,0 +1,176 @@
+<html>
+  <head>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>
+  <script type="text/javascript" src="jquery.jsonp-1.0.5.min.js"></script>
+  <script src="http://api.timepedia.org/widget/chronoscope.js"></script> 
+  <script src="iso8601.js"></script>
+    <script>
+      $.jsonp.setup({
+        cache: true,
+        callbackParameter: "_callback"
+      });
+      var metrics_cache = [];
+      var graph_list = [];
+      var servicedesc = "http://core.deltaplex3.dev.api.local/service_descriptors";
+      function ChronoData() {
+        // methods
+        this.obsToChrono = function obsToChrono(obs)
+        {
+          this.id     = obs.href;
+          this.label  = obs.metric_href;
+          this.axis   = "metric";
+          for (var i=0;i<obs.items.length; i++)
+          {
+            var date = new Date();
+            date.setISO8601(obs.items[i].recorded_at);
+            this.domain[i] = date.getTime();
+            this.range[i] = obs.items[i].value;
+          }
+        }
+        this.id = "default id";
+        this.domain = new Array();
+        this.range = new Array();
+        this.label = "default label";
+        this.axis = "default axis";
+      }
+      function findservice(service_name,callback) {
+        $.jsonp({
+          url:servicedesc, 
+          success:function(services) {
+            found_service = $.grep(services.items, function(service, i) {
+              return service.service_type === service_name;
+            })[0];
+            callback(found_service);
+          }
+        })
+      }
+
+      function findresource(resource_name,service, callback) {
+        $.jsonp({
+          url:found_service.href, 
+          success:function(resources) {
+            resource = $.grep(resources.items, function(resource,i) {
+              return resource.name === resource_name;
+            })[0];
+            callback(resource);
+          }
+        });
+      }
+
+      function getresource(url,callback){
+        $.jsonp({
+          url:url,
+          success:function(res) {
+            callback(res);
+          }
+        });
+      }
+
+      $(document).ready(function() {
+        findservice("http://systemshepherd.com/services/kernel",function(srv) {
+          findresource("AllClients",srv,function(res) {
+            getresource(res.href,function(resource) {
+              $.each(resource.items,function() {
+                $('#clientselect').append("<option value="+this.href+">"+this.name+"</option>");
+              });
+            })
+          })
+        });
+        $("#clientselect").change(function() {
+          metrics_cache = [];
+          $('#hostselect').empty();
+          $('#suggest').empty();
+          $('#metricfinder').val("");
+          client_href = $('#clientselect').val();
+          getresource(client_href,function(client) {
+            getresource(client.hosts_href,function(hosts) {
+              var content = '<option value="">Select a Host</option>';
+              $.each(hosts.items,function() { 
+                content += "<option value="+this.href+">"+this.name+"</option>"
+              });
+              $('#hostselect').html(content); 
+              $('#hostselect').fadeIn();
+            });
+          });
+        });
+
+        $("#hostselect").change(function() {
+          metrics_cache = [];
+          $('#suggest').empty();
+          $('#metricfinder').val("");
+          host_href = $('#hostselect').val();
+          getresource(host_href,function(host) {
+            getresource(host.metrics_href, function(metrics) {
+              metrics_cache = metrics;
+            });
+          });
+          $('#metricfinder').fadeIn();
+        });
+
+        $('#metricfinder').keyup(function() {
+          search = $('#metricfinder').val();
+            if (search.length > 0)
+            {
+              content ="";
+              found = $.grep(metrics_cache.items,function(metric, i) {
+                return (metric.metric_type.path.toLowerCase().match(search.toLowerCase()));
+              });
+              $.each(found,function () {
+                content += "<li>"+this.metric_type.path+" <a href=\""+this.href+"\">Add</a></li>";
+              });
+              $('#suggest').html(content);
+            } else
+            {
+              $('#suggest').empty();
+            }
+        });
+        $('#suggest').click(function(e) {
+          var clicked = $(e.target);
+          graph_list.push(clicked.attr("href"));
+          $("#graphbutton").fadeIn();
+          return false;
+        });
+        $('#graphbutton').click(function() {
+          $('#searchresults').fadeOut();
+          $('#searchresults').empty();
+          var data = new ChronoData();
+          $.each(graph_list, function() {
+            getresource(this,function(metric) {
+              data.obsToChrono(this.observations_href);
+              chronoscope.Chronoscope.setFontBookRendering(true);
+              chronoscope.Chronoscope.setErrorReporting(true);
+              chronoscope.Chronoscope.createTimeseriesChartById("graph", data, 650, 433, function(view)
+              {
+                view.getChart().redraw();
+              });
+            });
+          });
+        });
+        $('form').submit(function () {
+          return false;
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div id="content">
+      <form name="selector">
+        <select id="clientselect">
+          <option value="">Select a Client</option>
+        </select>
+        <select id="hostselect" style="display:none">
+          <option value="">Select a Host</option>
+        </select>
+        <input name="metric_search" id="metricfinder" style="display:none">
+        </input>
+        <button id="graphbutton" style="display:none">Graph</button>
+      </form>
+    </div>
+    <div id="searchresults">
+      <ul id="suggest">
+      </ul>
+    </div>
+    <div id="graph"></div>
+
+  </body>
