@@ -66,7 +66,7 @@
                 return (metric.metric_type.path.toLowerCase().match(search.toLowerCase()));
               });
               $.each(found,function () {
-                content += "<li>"+this.metric_type.path+" <a href=\""+this.href+"\">Add</a></li>";
+                content += "<li>"+this.metric_type.path+" <a href=\""+this.observations_href+"\">Add</a></li>";
               });
               $('#suggest').html(content);
             } else
@@ -83,10 +83,10 @@
         $('#graphbutton').click(function() {
           $('#searchresults').fadeOut();
           $('#searchresults').empty();
-          var data = new ChronoData();
+          var data = [];
           $.each(graph_list, function() {
-            getresource(this,function(metric) {
-              data.obsToChrono(this.observations_href);
+            getresource(this,function(observations) {
+              data.push(observations.items);
               chronoscope.Chronoscope.setFontBookRendering(true);
               chronoscope.Chronoscope.setErrorReporting(true);
               chronoscope.Chronoscope.createTimeseriesChartById("graph", data, 650, 433, function(view)
@@ -96,6 +96,7 @@
             });
           });
         });
+
         $('form').submit(function () {
           return false;
         });
