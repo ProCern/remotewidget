@@ -17,7 +17,6 @@ Date.prototype.setISO8601 = function (string) {
     offset = (Number(d[16]) * 60) + Number(d[17]);
     offset *= ((d[15] == '-') ? 1 : -1);
   }
-
   offset -= date.getTimezoneOffset();
   time = (Number(date) + (offset * 60 * 1000));
   this.setTime(Number(time));

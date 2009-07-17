@@ -69,6 +69,7 @@
                 content += "<li>"+this.metric_type.path+" <a href=\""+this.observations_href+"\">Add</a></li>";
               });
               $('#suggest').html(content);
+              $('#suggest').fadeIn();
             } else
             {
               $('#suggest').empty();
@@ -80,21 +81,11 @@
           $("#graphbutton").fadeIn();
           return false;
         });
+
         $('#graphbutton').click(function() {
           $('#searchresults').fadeOut();
           $('#searchresults').empty();
-          var data = [];
-          $.each(graph_list, function() {
-            getresource(this,function(observations) {
-              data.push(observations.items);
-              chronoscope.Chronoscope.setFontBookRendering(true);
-              chronoscope.Chronoscope.setErrorReporting(true);
-              chronoscope.Chronoscope.createTimeseriesChartById("graph", data, 650, 433, function(view)
-              {
-                view.getChart().redraw();
-              });
-            });
-          });
+          graphobsarray("graph",graph_list);
         });
 
         $('form').submit(function () {
