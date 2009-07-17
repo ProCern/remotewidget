@@ -31,6 +31,29 @@ function getresource(url,callback){
   });
 }
 
+function getresources(urls,callback) {
+  $.each
+}
+
+function getobs(obs_list) {
+  data = new Array();
+  $.each(obs_list,function(i,value) {
+      getresource(value,function(obs_res) {
+        var set = new Array();
+        $.each(obs_res.items, function(j,item) {
+          var stamp = new Date();
+          stamp.setISO8601(this.timestamp);
+          set.push([stamp.getTime(),item.value]);
+          });
+        data.push(set.sort());
+        });
+      });
+}
+
+function graphdata(s) {
+    $.plot($(s),data,{xaxis:{mode:"time"}});
+}
+
 function graphflot(sel,obs_href) {
   getresource(obs_href,function(observations) {
     var d=new Array();
@@ -39,39 +62,8 @@ function graphflot(sel,obs_href) {
       stamp.setISO8601(item.timestamp);
       d.push([stamp.getTime(),item.value])
       });
-    d.sort(function(a,b){a[0]-b[0];});
-    console.log(d);
-    $.plot($(sel),[d],{xaxis:{mode:"time"}});
+    var sorted = d.sort();
+    $.plot($(sel),[sorted],{xaxis:{mode:"time"}});
   });
 }
 
-function graphobsarray(chronoscope,id,graph_list) {
-  var data = [];
-  $.each(graph_list, function(obs_href) {
-    data.push({});
-    var i=data.length-1;
-    getresource(obs_href,function(observations) {
-      data[i]["range"] = [];
-      data[i]["domain"] = [];
-      data[i]["axis"] = "Axis";
-      data[i]["label"] = "Label";
-      data[i]["id"] = obs_href;
-      $.each(observations.items,function() {
-        var stamp = new Date();
-        stamp.setISO8601(this.timestamp);
-        data[i]["range"].push(this.value);
-        data[i]["domain"].push(stamp.getTime());
-      });
-    });
-    console.log(data);
-  });
-  chronoscope.Chronoscope.setFontBookRendering(true);
-  chronoscope.Chronoscope.setErrorReporting(true);
-  chronoscope.Chronoscope.setFontBookServiceEndpoint("http://api.timepedia.org/fr"); 
-
-  chronoscope.Chronoscope.createTimeseriesChartById(id, data, 650, 433, 
-    function(view) {
-      view.getChart().redraw();
-    });
-  console.log("done.");
-}
