@@ -7,7 +7,7 @@ function findservice(service_name,callback) {
       })[0];
       callback(found_service);
     }
-  })
+  });
 }
 
 function findresource(resource_name,service, callback) {
@@ -31,36 +31,37 @@ function getresource(url,callback){
   });
 }
 
-function getresources(urls,callback) {
-  $.each
-}
-
-function getobs(obs_list) {
-  data = new Array();
+function graphlist(s,obs_list) {
+  var rq = new RequestQueue();
   $.each(obs_list,function(i,value) {
-      getresource(value,function(obs_res) {
-        var set = new Array();
-        $.each(obs_res.items, function(j,item) {
-          var stamp = new Date();
-          stamp.setISO8601(this.timestamp);
-          set.push([stamp.getTime(),item.value]);
-          });
-        data.push(set.sort());
-        });
+    rq.addRequest(getresource, value);
+  });
+  rq.whenAllCompleted = function(results) {
+    var data = [];
+    data = $.map(obs_list, function(obs_href) {
+      return $.map(results[obs_href].items,function(item) {
+        var stamp = new Date();
+        stamp.setISO8601(item.timestamp);
+        return([stamp.getTime(),item.value]);
       });
+    });
+    graphdata(s,data);
+  };
+  rq.dispatchAll();
 }
 
-function graphdata(s) {
-    $.plot($(s),data,{xaxis:{mode:"time"}});
+function graphdata(s,data) {
+    console.log(data);
+    $.plot($(s),[data],{xaxis:{mode:"time"}});
 }
 
 function graphflot(sel,obs_href) {
   getresource(obs_href,function(observations) {
-    var d=new Array();
+    var d = [];
     $.each(observations.items,function(j,item) {
       var stamp = new Date();
       stamp.setISO8601(item.timestamp);
-      d.push([stamp.getTime(),item.value])
+      d.push([stamp.getTime(),item.value]);
       });
     var sorted = d.sort();
     $.plot($(sel),[sorted],{xaxis:{mode:"time"}});

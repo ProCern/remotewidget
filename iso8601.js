@@ -1,6 +1,6 @@
 Date.prototype.setISO8601 = function (string) {
   var regexp = "([0-9]{4})(-([0-9]{2})(-([0-9]{2})" +
-    "(T([0-9]{2}):([0-9]{2})(:([0-9]{2})(\.([0-9]+))?)?" +
+    "(T([0-9]{2}):([0-9]{2})(:([0-9]{2})(\\.([0-9]+))?)?" +
     "(Z|(([-+])([0-9]{2}):([0-9]{2})))?)?)?)?";
   var d = string.match(new RegExp(regexp));
 
@@ -20,5 +20,5 @@ Date.prototype.setISO8601 = function (string) {
   offset -= date.getTimezoneOffset();
   time = (Number(date) + (offset * 60 * 1000));
   this.setTime(Number(time));
-}
+};
 
