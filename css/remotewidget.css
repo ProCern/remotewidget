@@ -12,6 +12,10 @@ a:hover {
   text-decoration: underline;
 }
 
+#searchresults ul li {
+  list-style:none;
+}
+
 #menu {
   width: 100%;
   background: #fff;
