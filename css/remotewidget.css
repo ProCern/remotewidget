@@ -77,3 +77,8 @@ div#menu ul ul li:hover ul,
 div#menu ul ul ul li:hover ul
 {display: block;}
 
+#menu ul ul {
+  position: absolute;
+  z-index: 500;
+}
+
