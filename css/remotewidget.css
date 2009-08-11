@@ -1,0 +1,79 @@
+body { 
+ font-family: verdana, "trebuchet MS", helvetica, sans-serif; 
+ font-size: 0.8em;
+ }
+
+a {
+  text-decoration: none;
+  color: #
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+#menu {
+  width: 100%;
+  background: #fff;
+  float: left;
+}
+
+#menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 12em;
+  float: left;
+}
+
+#menu a {
+  color: #000;
+  background: #efefef;
+  text-decoration: none;
+}
+
+#menu a:hover {
+  color: #a00;
+  background: #fff;
+}
+
+
+#menu a, #menu h2 {
+  font-size: 1em;
+  display: block;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #ccc #888 #555 #bbb;
+  margin: 0;
+  padding: 2px 3px;
+}
+
+
+#menu h2 {
+  color: #fff;
+  background: #000;
+}
+
+#graph {
+  width:44%;
+  height:480px;
+  float:right;
+}
+
+#searchresults {
+  font-size: 0.7em;
+  width:44%;
+  float:left;
+  text-align: right;
+}
+
+div#menu ul ul,
+div#menu ul li:hover ul ul,
+div#menu ul ul li:hover ul ul
+{display: none;}
+
+div#menu ul li:hover ul,
+div#menu ul ul li:hover ul,
+div#menu ul ul ul li:hover ul
+{display: block;}
+
