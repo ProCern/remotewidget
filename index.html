@@ -97,7 +97,11 @@
         $('#suggest').click(function(e) {
           var content = "";
           var clicked = $(e.target);
-          graph_list.push({url:clicked.attr("href"),label:clicked.text()});
+          var yesterday = new Date();
+          var today = new Date();
+          yesterday.setDate(yesterday.getDate() -1);
+          var params = "?start="+yesterday.toISO8601String()+"&end="+today.toISO8601String();
+          graph_list.push({url:clicked.attr("href")+params,label:clicked.text()});
           $.jGrowl("Adding "+clicked.text());
           graphlist("#graph",graph_list);
           return false;
