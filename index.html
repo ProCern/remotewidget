@@ -23,7 +23,7 @@
       var metrics_cache = [];
       var graph_list = [];
       var data = [];
-      var servicedesc = "http://core.deltaplex3.dev.api.local/service_descriptors";
+      var servicedesc = "http://core.monitoring.hosting.com/service_descriptors"; 
 
       $(document).ready(function() {
         findservice("http://systemshepherd.com/services/kernel",function(srv) {
@@ -43,6 +43,9 @@
           $('#hostselect').empty();
           $('#suggest').empty();
           $('#metricfinder').val("");
+          $('#metricfinder').slideUp();
+          $('#hosthead').html("Select a Host...");
+
           client_href = clicked.attr("href");
           if (client_href != "") {
             getresource(client_href,function(client) {
