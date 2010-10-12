@@ -23,7 +23,7 @@
       var metrics_cache = [];
       var graph_list = [];
       var data = [];
-      var servicedesc = "http://core.monitoring.hosting.com/service_descriptors"; 
+      var servicedesc = "http://core.ss-internal2.den.sysshep.com/service_descriptors"; 
 
       $(document).ready(function() {
         findservice("http://systemshepherd.com/services/kernel",function(srv) {
@@ -117,20 +117,20 @@
       <div id="menu">
         <ul>
           <li>
-            <div id="clientcontainer">
-              <h2 class="dropheader" id="clienthead">Select a Client...</h2>
-              <ul class="dropdown" id="clientselect">
-              </ul>
-            </div>
+          <div id="clientcontainer">
+            <h2 class="dropheader" id="clienthead">Select a Client...</h2>
+            <ul class="dropdown" id="clientselect">
+            </ul>
+          </div>
           </li>
         </ul>
         <ul>
           <li>
-            <div id="hostcontainer" style="display:none;">
-              <h2 class="dropheader" id="hosthead">Select a Host...</h2>
-              <ul class="dropdown" id="hostselect">
-              </ul>
-            </div>
+          <div id="hostcontainer" style="display:none;">
+            <h2 class="dropheader" id="hosthead">Select a Host...</h2>
+            <ul class="dropdown" id="hostselect">
+            </ul>
+          </div>
           </li>
         </ul>
         <ul>
@@ -146,6 +146,5 @@
     </div>
     <div id="graph">
     </div>
-  </div>
-</body>
+  </body>
 </html>
