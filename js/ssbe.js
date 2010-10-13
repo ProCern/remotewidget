@@ -1,6 +1,6 @@
 function findservice(service_name,callback) {
   $.jsonp({
-    url:servicedesc, 
+    url:servicedesc,
     success:function(services) {
       found_service = $.grep(services.items, function(service, i) {
         return service.service_type === service_name;
@@ -12,7 +12,7 @@ function findservice(service_name,callback) {
 
 function findresource(resource_name,service, callback) {
   $.jsonp({
-    url:found_service.href, 
+    url:found_service.href,
     success:function(resources) {
       resource = $.grep(resources.items, function(resource,i) {
         return resource.name === resource_name;

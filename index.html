@@ -3,7 +3,7 @@
   <link rel="stylesheet" type="text/css" href="css/remotewidget.css">
   <link rel="stylesheet" type="text/css" href="css/jquery.jgrowl.css">
   <link type="text/css" rel="stylesheet" href="http://jqueryui.com/themes/base/ui.all.css" />
-  
+
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>
   <script src="js/jquery.jsonp-1.0.6.min.js"></script>
@@ -23,7 +23,7 @@
       var metrics_cache = [];
       var graph_list = [];
       var data = [];
-      var servicedesc = "http://core.ss-internal2.den.sysshep.com/service_descriptors"; 
+      var servicedesc = "http://core.monitoring.hosting.com/service_descriptors";
 
       $(document).ready(function() {
         findservice("http://systemshepherd.com/services/kernel",function(srv) {
@@ -51,10 +51,10 @@
             getresource(client_href,function(client) {
               getresource(client.hosts_href,function(hosts) {
                 content = '';
-                $.each(hosts.items,function() { 
+                $.each(hosts.items,function() {
                   content += "<li><a href="+this.href+">"+this.name+"<\/a></li>";
                 });
-                $('#hostselect').html(content); 
+                $('#hostselect').html(content);
                 $('#hostcontainer').slideDown();
               });
             });
