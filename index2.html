@@ -1,0 +1,23 @@
+<html>
+  <head>
+  <link rel="stylesheet" type="text/css" href="css/remotewidget.css">
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+    <script>
+      var servicedesc = "http://core.ssbe.localhost/service_descriptors?_callback=C";
+      $(document).ready(function(){
+        var jqxhr = $.getJSON({url: servicedesc, success: function() {
+          alert("success");
+        }, dataType: 'jsonp'})
+        .success(function() { alert("second success"); })
+        .error(function(e) { console.log(e.error()); })
+      });
+
+    </script>
+  </head>
+  <body>
+    <div id="content">
+      <div id="clientselect">Clients:</div>
+    </div>
+  </body>
+</html>
